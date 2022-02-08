@@ -1,283 +1,127 @@
 ESX = nil
-
---[[ USAGE DETAILS
-
-Details on what to copy are found as examples here.
-
-TO ADD A NEW ELEVATOR SYSTEM
-
-Copy and paste the following and replace XXXX with the appropriate name from the config:
+QBCore = nil
+PlayerJob = nil
+PlayerGrade = nil
 
 CreateThread(function()
-    for k, v in pairs (Config.XXXX) do
-    exports['qtarget']:AddBoxZone(k, v.coords, 4.4, 3.7, {
-        name=k,
-        heading=v.heading,
-        debugPoly=false,
-        minZ=v.coords.z-1.5,
-        maxZ=v.coords.z+2
-    }, {
-        options = {
-            {
-                event = "angelicxs_elevator:XXXX",
-                icon = "fas fa-hand-point-up",
-                label = 'Use Elevator',
-            },
-
-        },
-            distance = 1.5 
-    })
-    end
-end)
-
-RegisterNetEvent("angelicxs_elevator:XXXX",function()
-    local elevator = {}
-    for k, v in pairs (Config.XXXX) do
-        table.insert(elevator,
-    {
-        id = k,
-        header = v.level,
-        txt = v.detail,
-        params = {
-            event = "angelicxs_elevator:movement",
-            arg1 = {
-                location = v.coords,
-                face = v.heading,
-                job = v.jobrestriction,
-                job2 = v.jobrestriction2,
-                job3 = v.jobrestriction3,
-                job4 = v.jobrestriction4,
-            }
-        }
-    })
-    end
-    TriggerEvent('nh-context:sendMenu', elevator)
-end)    
-
-]]
-
-
-CreateThread(function()
-    while true do
-        Wait(1000)
-        if ESX ~= nil then
-            PlayerData = ESX.GetPlayerData()
-            if PlayerData.job ~= nil then
-                PlayerJob = PlayerData.job.name
-            end
-        else
-            TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        end
-    end
-end)
-
-CreateThread(function()
-    for k, v in pairs (Config.VPDMainElevator) do
-    exports['qtarget']:AddBoxZone(k, v.coords, 5, 4, {
-        name=k,
-        heading=v.heading,
-        debugPoly= false,
-        minZ=v.coords.z-1.5,
-        maxZ=v.coords.z+1.5
-    }, {
-        options = {
-            {
-                event = "angelicxs_elevator:VPDMainElevator",
-                icon = "fas fa-hand-point-up",
-                label = 'Use Elevator',
-            },
-
-        },
-            distance = 1.5 
-    })
-    end
-    for k, v in pairs (Config.VPDPublicElevator) do
-        exports['qtarget']:AddBoxZone(k, v.coords, 5, 4, {
-            name=k,
-            heading=v.heading,
-            debugPoly= false,
-            minZ=v.coords.z-1.5,
-            maxZ=v.coords.z+1.5
-        }, {
-            options = {
-                {
-                    event = "angelicxs_elevator:VPDPublicElevator",
-                    icon = "fas fa-hand-point-up",
-                    label = 'Use Elevator',
-                },
-    
-            },
-                distance = 1.5 
-        })
-    end
-    for k, v in pairs (Config.SkybarElevatorSouth) do
-        exports['qtarget']:AddBoxZone(k, v.coords, 4.4, 3.7, {
-            name=k,
-            heading=v.heading,
-            debugPoly=false,
-            minZ=v.coords.z-1.5,
-            maxZ=v.coords.z+2
-        }, {
-            options = {
-                {
-                    event = "angelicxs_elevator:SkybarElevatorSouth",
-                    icon = "fas fa-hand-point-up",
-                    label = 'Use Elevator',
-                },
-    
-            },
-                distance = 1.5 
-        })
-    end
-    for k, v in pairs (Config.SkybarElevatorNorth) do
-        exports['qtarget']:AddBoxZone(k, v.coords, 4.4, 3.7, {
-            name=k,
-            heading=v.heading,
-            debugPoly=false,
-            minZ=v.coords.z-1.5,
-            maxZ=v.coords.z+2
-        }, {
-            options = {
-                {
-                    event = "angelicxs_elevator:SkybarElevatorNorth",
-                    icon = "fas fa-hand-point-up",
-                    label = 'Use Elevator',
-                },
-    
-            },
-                distance = 1.5 
-        })
-    end
-end)
-
-RegisterNetEvent('angelicxs_elevator:movement', function(data)
-    local newcoords = data.location
-    local heading = data.face
-    local floor = data.header
-    local info = data.txt
-    local job = data.job
-    local job2 = data.job2
-    local job3 = data.job3
-    local job4 = data.job4
-    if job ~= nil then
-        if PlayerJob == job or PlayerJob == job2 or PlayerJob == job3 or PlayerJob == job4 then
+    if Config.UseESX then
+        while ESX == nil do
+            TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
             Wait(0)
-            ElevatorMovement(newcoords,heading,floor,info)
-        elseif PlayerJob ~= job then
-            TriggerEvent('angelicxs_elevator:notify','error',"You do not have clearance to go to this floor!")
         end
-    else
-        Wait(0)
-        ElevatorMovement(newcoords,heading,floor,info)
+    
+        while not ESX.IsPlayerLoaded() do
+            Wait(100)
+        end
+    
+        local playerData = ESX.GetPlayerData()
+        PlayerJob = playerData.job.name
+        PlayerGrade = playerData.job.grade
+
+        RegisterNetEvent("esx:setJob", function(job)
+            PlayerJob = job.name
+            PlayerGrade = job.grade
+        end)
+
+    elseif Config.UseQBCore then
+
+        QBCore = exports["qb-core"]:GetCoreObject()
+
+        local playerData = QBCore.Functions.GetPlayerData()
+        PlayerJob = playerData.job.name
+        PlayerGrade = playerData.job.grade
+
+        RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
+            PlayerJob = job.name
+            PlayerGrade = job.grade
+        end)
     end
 end)
 
-function ElevatorMovement(coords,heading,floor,info)
-    DoScreenFadeOut(800)
-        while not IsScreenFadedOut() do
-            Wait(10)
-        end
-    ESX.Game.Teleport(PlayerPedId(),coords)
---    SetEntityCoords(PlayerPedId(),coords)
-    if heading then
-        SetEntityHeading(PlayerPedId(), heading)
-    end
-    DoScreenFadeIn(800)
- --   TriggerEvent('angelicxs_elevator:notify', 'inform', "You have taken the elevator to " .. floor .. ". The " .. info .. " can be found here.")
+CreateThread(function()
+	for elevatorName, elevatorFloors in pairs(Config.Elevators) do
+		for index, floor in pairs(elevatorFloors) do
+			exports["qtarget"]:AddBoxZone(elevatorName .. index, floor.coords, 5, 4, {
+				name = elevatorName,
+				heading = floor.heading,
+				debugPoly = false,
+				minZ = floor.coords.z - 1.5,
+				maxZ = floor.coords.z + 1.5
+			},
+			{
+				options = {
+					{
+						event = "angelicxs_elevator:showFloors",
+						icon = "fas fa-hand-point-up",
+						label = "Use Elevator From " .. floor.level,
+						elevator = elevatorName,
+						level = index
+					},
+				},
+				distance = 1.5 
+			})
+		end
+	end
+end)
+
+RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
+	local elevator = {}
+	for index, floor in pairs(Config.Elevators[data.elevator]) do
+		if index ~= data.index then
+			table.insert(elevator, {
+				id = index,
+				header = floor.level,
+				txt = floor.label,
+				params = {
+					event = "angelicxs_elevator:movement",
+					args = {
+						floor = floor
+					}
+				}
+			})
+		end
+	end
+	TriggerEvent("nh-context:sendMenu", elevator)
+end)
+
+RegisterNetEvent("angelicxs_elevator:movement", function(data)
+	if hasRequiredJob(data.floor.jobs) then
+		local ped = PlayerPedId()
+		DoScreenFadeOut(1500)
+		while not IsScreenFadedOut() do
+			Wait(10)
+		end
+		RequestCollisionAtCoord(data.floor.coords.x, data.floor.coords.y, data.floor.coords.z)
+		while not HasCollisionLoadedAroundEntity(ped) do
+			Citizen.Wait(0)
+		end
+		SetEntityCoords(ped, data.floor.coords.x, data.floor.coords.y, data.floor.coords.z, false, false, false, false)
+		SetEntityHeading(ped, data.floor.heading and data.floor.heading or 0.0)
+		Wait(3000)
+		DoScreenFadeIn(1500)
+	else
+		TriggerEvent("angelicxs_elevator:notify", "You don't have clearance for this floor!", "error")
+	end
+end)
+
+RegisterNetEvent("angelicxs_elevator:notify", function(message, type)
+	if Config.UseMythicNotify then
+		exports.mythic_notify:SendAlert(type, message, 4000)
+	elseif Config.UseESX then
+		ESX.ShowNotification(message)
+	elseif Config.UseQBCore then
+		QBCore.Functions.Notify(message, type)
+	end
+end)
+
+function hasRequiredJob(jobs)
+	if next(jobs) then
+		for jobName, gradeLevel in pairs(jobs) do
+			if PlayerJob == jobName and PlayerGrade == gradeLevel then
+				return true
+			end
+		end
+		return false
+	end
+	return true
 end
-
-RegisterNetEvent("angelicxs_elevator:VPDMainElevator",function()
-    local elevator = {}
-    for k, v in pairs (Config.VPDMainElevator) do
-        table.insert(elevator,
-    {
-        id = k,
-        header = v.level,
-        txt = v.detail,
-        params = {
-            event = "angelicxs_elevator:movement",
-            arg1 = {
-                location = v.coords,
-                face = v.heading,
-                job = v.jobrestriction,
-                job2 = v.jobrestriction2,
-                job3 = v.jobrestriction3,
-                job4 = v.jobrestriction4,
-            }
-        }
-    })
-    end
-    TriggerEvent('nh-context:sendMenu', elevator)
-end)   
-
-RegisterNetEvent("angelicxs_elevator:VPDPublicElevator",function()
-    local elevator = {}
-    for k, v in pairs (Config.VPDPublicElevator) do
-        table.insert(elevator,
-    {
-        id = k,
-        header = v.level,
-        txt = v.detail,
-        params = {
-            event = "angelicxs_elevator:movement",
-            arg1 = {
-                location = v.coords,
-                face = v.heading,
-                job = v.jobrestriction,
-                job2 = v.jobrestriction2,
-                job3 = v.jobrestriction3,
-                job4 = v.jobrestriction4,
-            }
-        }
-    })
-    end
-    TriggerEvent('nh-context:sendMenu', elevator)
-end) 
-
-RegisterNetEvent("angelicxs_elevator:SkybarElevatorSouth",function()
-    local elevator = {}
-    for k, v in pairs (Config.SkybarElevatorSouth) do
-        table.insert(elevator,
-    {
-        id = k,
-        header = v.level,
-        txt = v.detail,
-        params = {
-            event = "angelicxs_elevator:movement",
-            arg1 = {
-                location = v.coords,
-                face = v.heading,
-                job = v.jobrestriction,
-                job2 = v.jobrestriction2,
-                job3 = v.jobrestriction3,
-                job4 = v.jobrestriction4,
-            }
-        }
-    })
-    end
-    TriggerEvent('nh-context:sendMenu', elevator)
-end)    
-
-RegisterNetEvent("angelicxs_elevator:SkybarElevatorNorth",function()
-    local elevator = {}
-    for k, v in pairs (Config.SkybarElevatorNorth) do
-        table.insert(elevator,
-    {
-        id = k,
-        header = v.level,
-        txt = v.detail,
-        params = {
-            event = "angelicxs_elevator:movement",
-            arg1 = {
-                location = v.coords,
-                face = v.heading,
-                job = v.jobrestriction,
-                job2 = v.jobrestriction2,
-                job3 = v.jobrestriction3,
-                job4 = v.jobrestriction4,
-            }
-        }
-    })
-    end
-    TriggerEvent('nh-context:sendMenu', elevator)
-end)    
