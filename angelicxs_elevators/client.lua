@@ -67,19 +67,18 @@ end)
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
-		if index ~= data.index then
-			table.insert(elevator, {
-				id = index,
-				header = floor.level,
-				txt = floor.label,
-				params = {
-					event = "angelicxs_elevator:movement",
-					args = {
-						floor = floor
-					}
+		table.insert(elevator, {
+			id = index,
+			header = floor.level,
+			txt = floor.label,
+			disabled = index == data.level,
+			params = {
+				event = "angelicxs_elevator:movement",
+				args = {
+					floor = floor
 				}
-			})
-		end
+			}
+		})
 	end
 	TriggerEvent("nh-context:sendMenu", elevator)
 end)
@@ -117,7 +116,7 @@ end)
 function hasRequiredJob(jobs)
 	if next(jobs) then
 		for jobName, gradeLevel in pairs(jobs) do
-			if PlayerJob == jobName and PlayerGrade == gradeLevel then
+			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
 				return true
 			end
 		end
