@@ -74,7 +74,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 			disabled = index == data.level,
 			params = {
 				event = "angelicxs_elevator:movement",
-				args = {
+				arg1 = {
 					floor = floor
 				}
 			}
