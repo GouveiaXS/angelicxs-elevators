@@ -3,21 +3,30 @@ QBCore = nil
 PlayerJob = nil
 PlayerGrade = nil
 
--- if Config.UseESX then
 
 Citizen.CreateThread(function()
-	while ESX == nil do
+	if Config.UseESX then
+		
 		TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
 		Wait(0)
-	end
+		
 
-	while not ESX.IsPlayerLoaded() do
-		Wait(100)
-	end
+		while not ESX.IsPlayerLoaded() do
+			Wait(100)
+		end
 
-	local playerData = ESX.GetPlayerData()
-	PlayerJob = playerData.job.name
-	PlayerGrade = playerData.job.grade
+		local playerData = ESX.GetPlayerData()
+		PlayerJob = playerData.job.name
+		PlayerGrade = playerData.job.grade
+
+	elseif Config.UseQBCore then
+
+		QBCore = exports["qb-core"]:GetCoreObject()
+
+		local playerData = QBCore.Functions.GetPlayerData()
+		PlayerJob = playerData.job.name
+		PlayerGrade = playerData.job.grade
+	end
 end)
 
 RegisterNetEvent("esx:setJob", function(job)
@@ -25,20 +34,11 @@ RegisterNetEvent("esx:setJob", function(job)
 	PlayerGrade = job.grade
 end)
 
--- elseif Config.UseQBCore then
+RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
+	PlayerJob = job.name
+	PlayerGrade = job.grade
+end)
 
--- 	QBCore = exports["qb-core"]:GetCoreObject()
-
--- 	local playerData = QBCore.Functions.GetPlayerData()
--- 	PlayerJob = playerData.job.name
--- 	PlayerGrade = playerData.job.grade
-
--- 	RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
--- 		PlayerJob = job.name
--- 		PlayerGrade = job.grade
--- 	end)
-
--- end
 
 CreateThread(function()
 	for elevatorName, elevatorFloors in pairs(Config.Elevators) do
@@ -60,7 +60,7 @@ CreateThread(function()
 						level = floor.level
 					},
 				},
-				distance = 5.5 
+				distance = 1.5 
 			})
 		end
 	end
@@ -68,39 +68,31 @@ end)
 
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
-	local levels = floor
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
-		if index ~= data.index then
-			table.insert(elevator, {
-				id = index,
-				header = floor.level,
-				txt = floor.label,
-				disabled = index,
-				params = {
-					event = "angelicxs_elevator:movement",
-					args = {
-						floor = floor
-					}
-				}
-			})
-		end
+		table.insert(elevator, {
+			header = floor.level,
+			context = floor.label,
+			disabled = index == data.level,
+			event = "angelicxs_elevator:movement",
+			args = { floor }
+		})
 	end
 	TriggerEvent("nh-context:createMenu", elevator)
 end)
 
 RegisterNetEvent("angelicxs_elevator:movement", function(data)
-	if hasRequiredJob(data.floor.jobs) then
+	if hasRequiredJob(floor.jobs) then
 		local ped = PlayerPedId()
 		DoScreenFadeOut(1500)
 		while not IsScreenFadedOut() do
 			Wait(10)
 		end
-		RequestCollisionAtCoord(data.floor.coords.x, data.floor.coords.y, data.floor.coords.z)
+		RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
 		while not HasCollisionLoadedAroundEntity(ped) do
 			Citizen.Wait(0)
 		end
-		SetEntityCoords(ped, data.floor.coords.x, data.floor.coords.y, data.floor.coords.z, false, false, false, false)
-		SetEntityHeading(ped, data.floor.heading and data.floor.heading or 0.0)
+		SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
+		SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
 		Wait(3000)
 		DoScreenFadeIn(1500)
 	else
@@ -111,7 +103,7 @@ end)
 
 RegisterNetEvent("angelicxs_elevator:notify", function(message, type)
 	if Config.UseMythicNotify then
-		exports.mythic_notify:DoLongHudText(type, message, 4000)
+		exports.mythic_notify:SendAlert(type, message, 4000)
 	elseif Config.UseESX then
 		ESX.ShowNotification(message)
 	elseif Config.UseQBCore then

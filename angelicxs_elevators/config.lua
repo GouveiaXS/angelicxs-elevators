@@ -10,9 +10,8 @@ Config.UseMythicNotify = true	-- Use mythic_notify (Requires mythic_notify scrip
 
 	Dependencies (can be swapped out):
 		ESX or QBCore
-		qtarget
-		nh-context
-		nh-keyboard
+		qtarget ( https://github.com/overextended/qtarget/releases/tag/2.0.0 )
+		nh-context   version 2.21  ( https://github.com/nerohiro/nh-context/releases/tag/v2.21 )
 
 	To add an elevator, copy the table below and configure as needed:
 		coords = Enter vector3 coords of center of elevator
