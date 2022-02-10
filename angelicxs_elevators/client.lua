@@ -68,34 +68,29 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
 		table.insert(elevator, {
-			id = index,
 			header = floor.level,
-			txt = floor.label,
+			context = floor.label,
 			disabled = index == data.level,
-			params = {
-				event = "angelicxs_elevator:movement",
-				arg1 = {
-					floor = floor
-				}
-			}
+			event = "angelicxs_elevator:movement",
+			args = { floor }
 		})
 	end
-	TriggerEvent("nh-context:sendMenu", elevator)
+	TriggerEvent("nh-context:createMenu", elevator)
 end)
 
-RegisterNetEvent("angelicxs_elevator:movement", function(data)
-	if hasRequiredJob(data.floor.jobs) then
+RegisterNetEvent("angelicxs_elevator:movement", function(floor)
+	if hasRequiredJob(floor.jobs) then
 		local ped = PlayerPedId()
 		DoScreenFadeOut(1500)
 		while not IsScreenFadedOut() do
 			Wait(10)
 		end
-		RequestCollisionAtCoord(data.floor.coords.x, data.floor.coords.y, data.floor.coords.z)
+		RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
 		while not HasCollisionLoadedAroundEntity(ped) do
 			Citizen.Wait(0)
 		end
-		SetEntityCoords(ped, data.floor.coords.x, data.floor.coords.y, data.floor.coords.z, false, false, false, false)
-		SetEntityHeading(ped, data.floor.heading and data.floor.heading or 0.0)
+		SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
+		SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
 		Wait(3000)
 		DoScreenFadeIn(1500)
 	else
