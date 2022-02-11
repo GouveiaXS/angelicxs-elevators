@@ -2,13 +2,14 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'AngelicXS'
-version '1.0.0'
-
-dependencies "qtarget"
+version '2.0.0'
 
 client_scripts {
-
-    'client.lua',
     'config.lua',
+    'client.lua',
+}
 
+dependencies {
+    'qtarget',
+    'nh-context'
 }
