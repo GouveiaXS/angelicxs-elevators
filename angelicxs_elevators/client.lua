@@ -29,11 +29,11 @@ CreateThread(function()
 
         local playerData = QBCore.Functions.GetPlayerData()
         PlayerJob = playerData.job.name
-        PlayerGrade = playerData.job.grade
+        PlayerGrade = playerData.job.grade.level
 
         RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
             PlayerJob = job.name
-            PlayerGrade = job.grade
+            PlayerGrade = job.grade.level
         end)
     end
 end)
@@ -70,7 +70,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 		table.insert(elevator, {
 			header = floor.level,
 			context = floor.label,
-			disabled = index == data.level,
+			disabled = (index == data.level or not hasRequiredJob(floor.jobs)),
 			event = "angelicxs_elevator:movement",
 			args = { floor }
 		})
