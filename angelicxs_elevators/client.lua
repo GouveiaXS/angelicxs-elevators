@@ -70,7 +70,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 		table.insert(elevator, {
 			header = floor.level,
 			context = floor.label,
-			disabled = (index == data.level or not hasRequiredJob(floor.jobs) or not hasRequiredItem(floor.item)),
+			disabled = isDisabled(index, floor, data),
 			event = "angelicxs_elevator:movement",
 			args = { floor }
 		})
@@ -108,31 +108,32 @@ RegisterNetEvent("angelicxs_elevator:notify", function(message, type)
 	end
 end)
 
-function hasRequiredJob(jobs)
-	if next(jobs) then
-		for jobName, gradeLevel in pairs(jobs) do
+function isDisabled(index, floor, data)
+	if index == data.level then return true end
+	local hasJob = not next(floor.jobs)
+	local hasItem = floor.item == nil
+	if not hasJob then
+		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
-				return true
+				hasJob = true
+				break
 			end
 		end
-		return false
 	end
-	return true
-end
-
-function hasRequiredItem(name)
-	if name then
-		if Config.UseESX then
-			PlayerData = ESX.GetPlayerData()
-			for k, v in ipairs(PlayerData.inventory) do
-				if v.name == name and v.count > 0 then
-					return true
+	if not hasItem and (not hasJob or floor.jobAndItem) then
+		if name then
+			if Config.UseESX then
+				PlayerData = ESX.GetPlayerData()
+				for k, v in ipairs(PlayerData.inventory) do
+					if v.name == name and v.count > 0 then
+						hasItem = true
+						break
+					end
 				end
+			elseif Config.UseQBCore then
+				hasItem = QBCore.Functions.HasItem(name)
 			end
-			return false
-		elseif Config.UseQBCore then
-			return QBCore.Functions.HasItem(name)
 		end
 	end
-	return true
+	return floor.jobAndItem and (hasJob and hasItem) or (hasJob or hasItem)
 end
