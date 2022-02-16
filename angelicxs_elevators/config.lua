@@ -4,7 +4,7 @@ Config = {}
 Config.UseESX = true			-- Use ESX Framework
 Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = true)
 
-Config.UseMythicNotify = true	-- Use mythic_notify (Requires mythic_notify script)
+Config.UseMythicNotify = true		-- Use mythic_notify (Requires mythic_notify script)
 
 --[[
 	USAGE
@@ -13,14 +13,15 @@ Config.UseMythicNotify = true	-- Use mythic_notify (Requires mythic_notify scrip
 		ESX or QBCore
 		qtarget
 		nh-context
-		nh-keyboard
 
 	To add an elevator, copy the table below and configure as needed:
-		coords = Enter vector3 coords of center of elevator
+		coords = vector3 coords of center of elevator
 		heading = Direction facing out of the elevator
 		level = What floor are they going to
 		label = What is on that floor
-		jobs = Table of job keys that are allowed to access that floor and value of minimum grade of each job
+		jobs = OPTIONAL: Table of job keys that are allowed to access that floor and value of minimum grade of each job
+		item = OPTIONAL: Any item that is required to access that floor (bypasses job)
+		jobAndItem = OPTIONAL: Must you have a required job AND item?
 ]]
 
 --[[
@@ -29,15 +30,21 @@ Config.UseMythicNotify = true	-- Use mythic_notify (Requires mythic_notify scrip
 			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 2", label = "Roof",
 			jobs = {
 				["police"] = 0,
-				["ambulance"] = 0,
-			}
+				["ambulance"] = 0
+			},
+			item = "casino_pass"
 		},
 		{
-			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 1", label = "Ground",
+			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 1", label = "Penthouse",
 			jobs = {
 				["police"] = 0,
-				["ambulance"] = 0,
-			}
+				["ambulance"] = 0
+			},
+			item = "casino_pass",
+			jobAndItem = true
+		},
+		{
+			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 0", label = "Ground"
 		},
 	},
 ]]
