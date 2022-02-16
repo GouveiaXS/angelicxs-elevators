@@ -70,7 +70,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 		table.insert(elevator, {
 			header = floor.level,
 			context = floor.label,
-			disabled = (index == data.level or not hasRequiredJob(floor.jobs)),
+			disabled = (index == data.level or not hasRequiredJob(floor.jobs) or not hasRequiredItem(floor.item)),
 			event = "angelicxs_elevator:movement",
 			args = { floor }
 		})
@@ -116,6 +116,23 @@ function hasRequiredJob(jobs)
 			end
 		end
 		return false
+	end
+	return true
+end
+
+function hasRequiredItem(name)
+	if name then
+		if Config.UseESX then
+			PlayerData = ESX.GetPlayerData()
+			for k, v in ipairs(PlayerData.inventory) do
+				if v.name == name and v.count > 0 then
+					return true
+				end
+			end
+			return false
+		elseif Config.UseQBCore then
+			return QBCore.Functions.HasItem(name)
+		end
 	end
 	return true
 end
