@@ -125,7 +125,7 @@ function isDisabled(index, floor, data)
 			if Config.UseESX then
 				PlayerData = ESX.GetPlayerData()
 				for k, v in ipairs(PlayerData.inventory) do
-					if v.name == name and v.count > 0 then
+					if v.name == name and v.amount > 0 then
 						hasItem = true
 						break
 					end
