@@ -1,10 +1,7 @@
 Config = {}
 
-
 Config.UseESX = true			-- Use ESX Framework
 Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = true)
-
-Config.UseMythicNotify = true		-- Use mythic_notify (Requires mythic_notify script)
 
 --[[
 	USAGE
