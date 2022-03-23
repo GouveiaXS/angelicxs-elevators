@@ -17,8 +17,8 @@ Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = tr
 		level = What floor are they going to
 		label = What is on that floor
 		jobs = OPTIONAL: Table of job keys that are allowed to access that floor and value of minimum grade of each job
-		item = OPTIONAL: Any item that is required to access that floor (bypasses job)
-		jobAndItem = OPTIONAL: Must you have a required job AND item?
+		items = OPTIONAL: Any items that are required to access that floor (only requires one of the items listed)
+		jobAndItem = OPTIONAL: If true, you must you have a required job AND a required items. If false or nil no items are needed
 ]]
 
 --[[
@@ -27,17 +27,25 @@ Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = tr
 			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 2", label = "Roof",
 			jobs = {
 				["police"] = 0,
-				["ambulance"] = 0
+				["ambulance"] = 0,
+				["casino"] = 0
 			},
-			item = "casino_pass"
+			items = {
+				"casino_pass_bronze",
+				"casino_pass_silver",
+				"casino_pass_gold",
+			}
 		},
 		{
 			coords = vector3(xxx, yyy, zzz), heading = 0.0, level = "Floor 1", label = "Penthouse",
 			jobs = {
 				["police"] = 0,
-				["ambulance"] = 0
+				["ambulance"] = 0,
+				["casino"] = 0
 			},
-			item = "casino_pass",
+			items = {
+				"casino_pass_gold"
+			}
 			jobAndItem = true
 		},
 		{
@@ -126,7 +134,6 @@ Config.Elevators = {
 	VPDPublicElevator = {
 		{
 			coords = vector3(-1066.05, -833.71, 26.82318), heading = 36.1, level = "Floor 3", label = "Division Offices",
-			jobs = {}
 		},
 		{
 			coords = vector3(-1066.05, -833.71, 23.03471), heading = 36.1, level = "Floor 2", label = "UNDER RENOVATIONS",
@@ -138,7 +145,6 @@ Config.Elevators = {
 		},
 		{
 			coords = vector3(-1066.05, -833.713, 18.9964), heading = 36.1, level = "Floor 1", label = "Main Hall",
-			jobs = {}
 		},
 		{
 			coords = vector3(-1066.05, -833.71, 4.88), heading = 36.1, level = "Floor -1", label = "Detention Cells & Interrogation",
@@ -170,22 +176,18 @@ Config.Elevators = {
 	SkybarElevatorSouth = {
 		{
 			coords = vector3(315.49, -929.32, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-			jobs = {}
 		},
 		{
 			coords = vector3(315.49, -929.32, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-			jobs = {}
 		},
 	},
 	
 	SkybarElevatorNorth = {
 		{
 			coords = vector3(309.81, -929.05, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-			jobs = {}
 		},
 		{
 			coords = vector3(309.81, -929.05, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-			jobs = {}
 		},
 	},
 
