@@ -79,33 +79,19 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 end)
 
 RegisterNetEvent("angelicxs_elevator:movement", function(floor)
-	if hasRequiredJob(floor.jobs) then
-		local ped = PlayerPedId()
-		DoScreenFadeOut(1500)
-		while not IsScreenFadedOut() do
-			Wait(10)
-		end
-		RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
-		while not HasCollisionLoadedAroundEntity(ped) do
-			Citizen.Wait(0)
-		end
-		SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
-		SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
-		Wait(3000)
-		DoScreenFadeIn(1500)
-	else
-		TriggerEvent("angelicxs_elevator:notify", "You don't have clearance for this floor!", "error")
+	local ped = PlayerPedId()
+	DoScreenFadeOut(1500)
+	while not IsScreenFadedOut() do
+		Wait(10)
 	end
-end)
-
-RegisterNetEvent("angelicxs_elevator:notify", function(message, type)
-	if Config.UseMythicNotify then
-		exports.mythic_notify:SendAlert(type, message, 4000)
-	elseif Config.UseESX then
-		ESX.ShowNotification(message)
-	elseif Config.UseQBCore then
-		QBCore.Functions.Notify(message, type)
+	RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
+	while not HasCollisionLoadedAroundEntity(ped) do
+		Citizen.Wait(0)
 	end
+	SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
+	SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
+	Wait(3000)
+	DoScreenFadeIn(1500)
 end)
 
 function isDisabled(index, floor, data)
