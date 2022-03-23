@@ -107,18 +107,16 @@ function isDisabled(index, floor, data)
 		end
 	end
 	if not hasItem and (not hasJob or floor.jobAndItem) then
-		if name then
-			if Config.UseESX then
-				PlayerData = ESX.GetPlayerData()
-				for k, v in ipairs(PlayerData.inventory) do
-					if v.name == name and v.count > 0 then
-						hasItem = true
-						break
-					end
+		if Config.UseESX then
+			PlayerData = ESX.GetPlayerData()
+			for k, v in ipairs(PlayerData.inventory) do
+				if v.name == floor.item and v.count > 0 then
+					hasItem = true
+					break
 				end
-			elseif Config.UseQBCore then
-				hasItem = QBCore.Functions.HasItem(name)
 			end
+		elseif Config.UseQBCore then
+			hasItem = QBCore.Functions.HasItem(floor.item)
 		end
 	end
 	return floor.jobAndItem and (hasJob and hasItem) or (hasJob or hasItem)
