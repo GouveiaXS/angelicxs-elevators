@@ -80,19 +80,56 @@ end)
 
 RegisterNetEvent("angelicxs_elevator:movement", function(floor)
 	local ped = PlayerPedId()
-	DoScreenFadeOut(1500)
-	while not IsScreenFadedOut() do
-		Wait(10)
-	end
-	RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
-	while not HasCollisionLoadedAroundEntity(ped) do
-		Citizen.Wait(0)
-	end
-	SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
-	SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
-	Wait(3000)
-	DoScreenFadeIn(1500)
+    if hasRequiredJob(floor.jobs) or hasRequiredItem(floor.item) then
+        DoScreenFadeOut(1500)
+        while not IsScreenFadedOut() do
+            Wait(10)
+        end
+        RequestCollisionAtCoord(floor.coords.x, floor.coords.y, floor.coords.z)
+        while not HasCollisionLoadedAroundEntity(ped) do
+            Citizen.Wait(0)
+        end
+        SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
+        SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
+        Wait(3000)
+        DoScreenFadeIn(1500)
+    else
+        TriggerEvent("angelicxs_elevator:notify", "You don't have clearance for this floor!", "error")
+    end
 end)
+
+
+function hasRequiredJob(jobs)
+	if next(jobs) then
+		for jobName, gradeLevel in pairs(jobs) do
+			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
+				return true
+			end
+		end
+		return false
+	end
+	return true
+end
+
+function hasRequiredItem(item)
+	if item ~= nil then
+        if Config.UseESX then
+            PlayerData = ESX.GetPlayerData()
+            for k, v in ipairs(PlayerData.inventory) do
+                if v.name == item and v.count > 0 then
+                    return true
+                end
+            end
+        elseif Config.UseQBCore then
+            local hasItem = QBCore.Functions.HasItem(item)
+            if hasItem == item then
+                return true
+            end
+        end 
+		return false
+	end
+	return false
+end
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
