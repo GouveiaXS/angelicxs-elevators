@@ -123,7 +123,6 @@ function isDisabled(index, floor, data)
 				end
 			end
 		elseif Config.UseQBCore then
-			--hasItem = QBCore.Functions.HasItem(floor.items)
 			for i = 1, #floor.items, 1 do
 				for slot, item in pairs(PlayerData.items) do
 					if PlayerData.items[slot] then
