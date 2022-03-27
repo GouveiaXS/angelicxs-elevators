@@ -1,41 +1,42 @@
 ESX = nil
 QBCore = nil
+PlayerData = nil
 PlayerJob = nil
 PlayerGrade = nil
 
 CreateThread(function()
-    if Config.UseESX then
-        while ESX == nil do
-            TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
-            Wait(0)
-        end
-    
-        while not ESX.IsPlayerLoaded() do
-            Wait(100)
-        end
-    
-        local playerData = ESX.GetPlayerData()
-        PlayerJob = playerData.job.name
-        PlayerGrade = playerData.job.grade
+	if Config.UseESX then
+		while ESX == nil do
+			TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
+			Wait(0)
+		end
+	
+		while not ESX.IsPlayerLoaded() do
+			Wait(100)
+		end
+	
+		PlayerData = ESX.GetPlayerData()
+		PlayerJob = playerData.job.name
+		PlayerGrade = playerData.job.grade
 
-        RegisterNetEvent("esx:setJob", function(job)
-            PlayerJob = job.name
-            PlayerGrade = job.grade
-        end)
+		RegisterNetEvent("esx:setJob", function(job)
+			PlayerJob = job.name
+			PlayerGrade = job.grade
+		end)
 
-    elseif Config.UseQBCore then
+	elseif Config.UseQBCore then
 
-        QBCore = exports["qb-core"]:GetCoreObject()
+		QBCore = exports["qb-core"]:GetCoreObject()
 
-        local playerData = QBCore.Functions.GetPlayerData()
-        PlayerJob = playerData.job.name
-        PlayerGrade = playerData.job.grade.level
+		PlayerData = QBCore.Functions.GetPlayerData()
+		PlayerJob = playerData.job.name
+		PlayerGrade = playerData.job.grade.level
 
-        RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
-            PlayerJob = job.name
-            PlayerGrade = job.grade.level
-        end)
-    end
+		RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
+			PlayerJob = job.name
+			PlayerGrade = job.grade.level
+		end)
+	end
 end)
 
 CreateThread(function()
@@ -66,6 +67,11 @@ end)
 
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
+	if Config.UseESX then
+		PlayerData = ESX.GetPlayerData()
+	elseif Config.UseQBCore then
+		PlayerData = QBCore.Functions.GetPlayerData()
+	end	
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
 		table.insert(elevator, {
 			header = floor.level,
@@ -133,8 +139,8 @@ end
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-	local hasJob = not next(floor.jobs)
-	local hasItem = floor.item == nil
+	local hasJob = floor.jobs == nil or not next(floor.jobs)
+	local hasItem = floor.items == nil or not next(floor.items)
 	if not hasJob then
 		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
@@ -143,17 +149,27 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	if not hasItem and (not hasJob or floor.jobAndItem) then
+	if not hasItem and (floor.jobAndItem or not hasJob) then
 		if Config.UseESX then
-			PlayerData = ESX.GetPlayerData()
-			for k, v in ipairs(PlayerData.inventory) do
-				if v.name == floor.item and v.count > 0 then
-					hasItem = true
-					break
+			for i = 1, #floor.items, 1 do
+				for k, v in ipairs(PlayerData.inventory) do
+					if v.name == floor.items[i] and v.count > 0 then
+						hasItem = true
+						break
+					end
 				end
 			end
 		elseif Config.UseQBCore then
-			hasItem = QBCore.Functions.HasItem(floor.item)
+			for i = 1, #floor.items, 1 do
+				for slot, item in pairs(PlayerData.items) do
+					if PlayerData.items[slot] then
+						if item.name == floor.items[i] then
+							hasItem = true
+							break
+						end
+					end
+				end
+			end
 		end
 	end
 	return floor.jobAndItem and (hasJob and hasItem) or (hasJob or hasItem)
