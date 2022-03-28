@@ -162,7 +162,6 @@ Config.Elevators = {
 				["police"] = 0,
 				["sheriff"] = 0,
 				["ambulance"] = 0,
-				["hclaw"] = 0,
 			},
 			items = {},
 		},
@@ -209,6 +208,82 @@ Config.Elevators = {
 		},
 			jobs = {},
 			items = {},
+	},
+	PillboxElevatorNorth = {
+		{
+			coords = vector3(332.37, -595.56, 43.28), heading = 70.65, level = "Upper Pillbox", label = "Pillbox - Main Floor",
+			jobs = {},
+			items = {},
+
+		},
+		{
+			coords = vector3(344.31, -586.12, 28.79), heading = 252.84, level = "Lower Pillbox", label = "Pillbox - Lower Pillbox",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 0,
+			},
+			items = {},
+		},
+		{
+			coords = vector3(340.05, -584.98, 28.79), heading = 88.21, level = "Parking", label = "Pillbox - Parking Facilities",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 0,
+			},
+			items = {
+				"bread",
+			},
+		},
+	},
+
+	PillboxElevatorSouth = {
+		{
+			coords = vector3(330.45, -601.07, 43.28), heading = 67.64, level = "Upper Pillbox", label = "Pillbox - Main Floor",
+			jobs = {},
+			items = {},
+
+		},
+		{
+			coords = vector3(345.68, -582.34, 28.79), heading = 248.30, level = "Lower Pillbox", label = "Pillbox - Lower Pillbox",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 0,
+			},
+			items = {},
+		},
+		{
+			coords = vector3(341.58, -580.88, 28.79), heading = 70.59, level = "Parking", label = "Pillbox - Parking Facilities",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 0,
+			},
+			items = {
+				"bread",
+			},
+		},
+	},
+
+	PillboxRoofTop = {
+		{
+			coords = vector3(338.52, -583.84, 74.16), heading = 254.13, level = "Rooftop", label = "Pillbox - HeliPad",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 2,
+			},
+			items = {
+				"bread",
+			},
+		},
+		{
+			coords = vector3(327.17, -603.87, 43.28), heading = 338.36, level = "Upper Pillbox", label = "Pillbox - Main Floor",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 2,
+			},
+			items = {
+				"bread",
+			},
+		},
 	},
 
 }
