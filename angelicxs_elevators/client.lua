@@ -16,8 +16,8 @@ CreateThread(function()
 		end
 	
 		PlayerData = ESX.GetPlayerData()
-		PlayerJob = playerData.job.name
-		PlayerGrade = playerData.job.grade
+		PlayerJob = PlayerData.job.name
+		PlayerGrade = PlayerData.job.grade
 
 		RegisterNetEvent("esx:setJob", function(job)
 			PlayerJob = job.name
@@ -29,8 +29,8 @@ CreateThread(function()
 		QBCore = exports["qb-core"]:GetCoreObject()
 
 		PlayerData = QBCore.Functions.GetPlayerData()
-		PlayerJob = playerData.job.name
-		PlayerGrade = playerData.job.grade.level
+		PlayerJob = PlayerData.job.name
+		PlayerGrade = PlayerData.job.grade.level
 
 		RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
 			PlayerJob = job.name
