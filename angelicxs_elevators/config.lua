@@ -187,27 +187,27 @@ Config.Elevators = {
 	SkybarElevatorSouth = {
 		{
 			coords = vector3(315.49, -929.32, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-		},
 			jobs = {},
 			items = {},
+		},
 		{
 			coords = vector3(315.49, -929.32, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-		},
 			jobs = {},
 			items = {},
+		},
 	},
 	
 	SkybarElevatorNorth = {
 		{
 			coords = vector3(309.81, -929.05, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-		},
 			jobs = {},
 			items = {},
+		},
 		{
 			coords = vector3(309.81, -929.05, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-		},
 			jobs = {},
 			items = {},
+		},
 	},
 	PillboxElevatorNorth = {
 		{
