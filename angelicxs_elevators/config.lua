@@ -16,8 +16,8 @@ Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = tr
 		heading = Direction facing out of the elevator
 		level = What floor are they going to
 		label = What is on that floor
-		jobs = Table of job keys that are allowed to access that floor and value of minimum grade of each job
-		items = Any items that are required to access that floor (only requires one of the items listed)
+		jobs = OPTIONAL: Table of job keys that are allowed to access that floor and value of minimum grade of each job
+		items = OPTIONAL: Any items that are required to access that floor (only requires one of the items listed)
 		jobAndItem = OPTIONAL: If true, you must you have a required job AND a required items. If false or nil no items are needed
 ]]
 
@@ -64,7 +64,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 34.40), heading = 36.8, level = "Floor 5", label = "Detective Bureau",
@@ -73,7 +72,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 30.80), heading = 36.8, level = "Floor 4", label = "Operations Center",
@@ -82,7 +80,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 27.00), heading = 36.8, level = "Floor 3", label = "Division Offices & Briefing Room",
@@ -91,7 +88,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 23.00), heading = 36.8, level = "Floor 2", label = "Cafe",
@@ -100,7 +96,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 19.00), heading = 36.8, level = "Floor 1", label = "Main Hall",
@@ -109,7 +104,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 4.80), heading = 36.8, level = "Floor -1", label = "Detention Cells & Interrogation",
@@ -118,7 +112,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 10.20), heading = 36.8, level = "Floor -2", label = "Crime Lab & Evidence Rooms",
@@ -127,7 +120,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1096.22, -850.763, 13.70), heading = 36.8, level = "Floor -3", label = "Garage & Armory",
@@ -136,7 +128,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 	},
 
@@ -151,7 +142,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1066.05, -833.713, 18.9964), heading = 36.1, level = "Floor 1", label = "Main Hall",
@@ -163,7 +153,6 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(-1066.05, -833.71, 10.27282), heading = 36.1, level = "Floor -2", label = "Crime Lab & Evidence Rooms",
@@ -180,41 +169,29 @@ Config.Elevators = {
 				["sheriff"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 	},
 
 	SkybarElevatorSouth = {
 		{
 			coords = vector3(315.49, -929.32, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-			jobs = {},
-			items = {},
 		},
 		{
 			coords = vector3(315.49, -929.32, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-			jobs = {},
-			items = {},
 		},
 	},
 	
 	SkybarElevatorNorth = {
 		{
 			coords = vector3(309.81, -929.05, 52.81), heading = 176.67, level = "Skybar 5th Floor", label = "Bar Level for Skybar",
-			jobs = {},
-			items = {},
 		},
 		{
 			coords = vector3(309.81, -929.05, 29.47), heading = 176.67, level = "Skybar Ground", label = "Street Level for Skybar",
-			jobs = {},
-			items = {},
 		},
 	},
 	PillboxElevatorNorth = {
 		{
 			coords = vector3(332.37, -595.56, 43.28), heading = 70.65, level = "Upper Pillbox", label = "Pillbox - Main Floor",
-			jobs = {},
-			items = {},
-
 		},
 		{
 			coords = vector3(344.31, -586.12, 28.79), heading = 252.84, level = "Lower Pillbox", label = "Pillbox - Lower Pillbox",
@@ -222,7 +199,6 @@ Config.Elevators = {
 				["police"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(340.05, -584.98, 28.79), heading = 88.21, level = "Parking", label = "Pillbox - Parking Facilities",
@@ -230,18 +206,12 @@ Config.Elevators = {
 				["police"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {
-				"bread",
-			},
 		},
 	},
 
 	PillboxElevatorSouth = {
 		{
 			coords = vector3(330.45, -601.07, 43.28), heading = 67.64, level = "Upper Pillbox", label = "Pillbox - Main Floor",
-			jobs = {},
-			items = {},
-
 		},
 		{
 			coords = vector3(345.68, -582.34, 28.79), heading = 248.30, level = "Lower Pillbox", label = "Pillbox - Lower Pillbox",
@@ -249,16 +219,12 @@ Config.Elevators = {
 				["police"] = 0,
 				["ambulance"] = 0,
 			},
-			items = {},
 		},
 		{
 			coords = vector3(341.58, -580.88, 28.79), heading = 70.59, level = "Parking", label = "Pillbox - Parking Facilities",
 			jobs = {
 				["police"] = 0,
 				["ambulance"] = 0,
-			},
-			items = {
-				"bread",
 			},
 		},
 	},
@@ -270,18 +236,12 @@ Config.Elevators = {
 				["police"] = 0,
 				["ambulance"] = 2,
 			},
-			items = {
-				"bread",
-			},
 		},
 		{
 			coords = vector3(327.17, -603.87, 43.28), heading = 338.36, level = "Upper Pillbox", label = "Pillbox - Main Floor",
 			jobs = {
 				["police"] = 0,
 				["ambulance"] = 2,
-			},
-			items = {
-				"bread",
 			},
 		},
 	},
