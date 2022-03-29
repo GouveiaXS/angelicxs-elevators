@@ -102,34 +102,32 @@ end)
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-	local hasJob = floor.jobs == nil or next(floor.jobs)
-	local hasItem = next(floor.items) or true
-	if hasJob then
+	local hasJob = floor.jobs == nil or not next(floor.jobs)
+	local hasItem = floor.items == nil or not next(floor.items)
+	if not hasJob then
 		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
-				hasJob = false
+				hasJob = true
 				break
 			end
 		end
 	end
-	
-	if hasItem and (floor.jobAndItem or hasJob) then
+	if not hasItem and (floor.jobAndItem or not hasJob) then
 		if Config.UseESX then
 			for i = 1, #floor.items, 1 do
 				for k, v in ipairs(PlayerData.inventory) do
 					if v.name == floor.items[i] and v.count > 0 then
-						hasItem = false
+						hasItem = true
 						break
 					end
 				end
 			end
 		elseif Config.UseQBCore then
-			--hasItem = QBCore.Functions.HasItem(floor.items)
 			for i = 1, #floor.items, 1 do
 				for slot, item in pairs(PlayerData.items) do
 					if PlayerData.items[slot] then
 						if item.name == floor.items[i] then
-							hasItem = false
+							hasItem = true
 							break
 						end
 					end
@@ -137,17 +135,5 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	
-	if floor.jobAndItem then
-		if not hasJob and not hasItem then
-			return false
-		else
-			return true
-		end
-	end
-	if not hasJob or not hasItem then
-		return false
-	else
-		return true
-	end
+	return floor.jobAndItem and (not hasJob or not hasItem) or (not hasJob and not hasItem)
 end
