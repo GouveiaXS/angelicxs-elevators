@@ -112,7 +112,7 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	if not hasItem and (floor.jobAndItem or not hasJob) then
+	if not hasItem then
 		if Config.UseESX then
 			for i = 1, #floor.items, 1 do
 				for k, v in ipairs(PlayerData.inventory) do
@@ -135,5 +135,24 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	return floor.jobAndItem and (not hasJob or not hasItem) or (not hasJob and not hasItem)
+	if floor.jobAndItem and (hasJob and hasItem) then
+		return false
+	end
+
+	if not floor.jobAndItem then
+		if hasJob and hasItem then
+			return false
+		elseif not hasJob and not hasItem then
+			return true
+		elseif floor.items == nil then
+			return not hasJob
+		elseif floor.jobs == nil then
+			return not hasItem
+		elseif floor.jobs ~= nil and floor.items ~= nil then
+			if hasJob or hasItem then
+				return false
+			end
+		end
+	end
+	return true
 end
