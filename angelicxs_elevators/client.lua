@@ -102,9 +102,8 @@ end)
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-	local hasJob = floor.jobs == nil or not next(floor.jobs)
-	local hasItem = floor.items == nil or not next(floor.items)
-	if not hasJob then
+	local hasJob, hasItem = false, false
+	if floor.jobs ~= nil and next(floor.jobs) then
 		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
 				hasJob = true
@@ -112,7 +111,7 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	if not hasItem then
+	if floor.items ~= nil and next(floor.items) then
 		if Config.UseESX then
 			for i = 1, #floor.items, 1 do
 				for k, v in ipairs(PlayerData.inventory) do
@@ -135,24 +134,6 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	if floor.jobAndItem and (hasJob and hasItem) then
-		return false
-	end
-
-	if not floor.jobAndItem then
-		if hasJob and hasItem then
-			return false
-		elseif not hasJob and not hasItem then
-			return true
-		elseif floor.items == nil then
-			return not hasJob
-		elseif floor.jobs == nil then
-			return not hasItem
-		elseif floor.jobs ~= nil and floor.items ~= nil then
-			if hasJob or hasItem then
-				return false
-			end
-		end
-	end
-	return true
+	if floor.jobs == nil and floor.items == nil then return false end 
+	return floor.jobAndItem and not (hasJob and hasItem) or not (hasJob or hasItem)
 end
