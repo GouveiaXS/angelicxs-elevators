@@ -63,6 +63,37 @@ CreateThread(function()
 			})
 		end
 	end
+
+	if Config.Notify.enabled then
+		local wasNotified = false
+		while true do
+			local sleep = 3000
+			local nearElevator = false
+			local playerCoords = GetEntityCoords(PlayerPedId())
+			for elevatorName, elevatorFloors in pairs(Config.Elevators) do
+				for index, floor in pairs(elevatorFloors) do
+					local distance = #(playerCoords - floor.coords)
+					if distance <= 10.0 then
+						sleep = 10
+						if distance <= Config.Notify.distance then
+							nearElevator = true
+							break
+						end
+					end
+				end
+			end
+			if nearElevator then
+				if not wasNotified then
+					NotifyHint()
+					wasNotified = true
+				end
+			else
+				wasNotified = false
+			end
+			Wait(sleep)
+		end
+	end
+
 end)
 
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
@@ -136,4 +167,10 @@ function isDisabled(index, floor, data)
 	end
 	if floor.jobs == nil and floor.items == nil then return false end 
 	return floor.jobAndItem and not (hasJob and hasItem) or not (hasJob or hasItem)
+end
+
+function NotifyHint()
+	AddTextEntry('elevatorHelp', Config.Notify.message)
+	BeginTextCommandDisplayHelp('elevatorHelp')
+	EndTextCommandDisplayHelp(0, false, true, -1)
 end
