@@ -1,7 +1,13 @@
 Config = {}
 
-Config.UseESX = true			-- Use ESX Framework
-Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = true)
+Config.UseESX = true						-- Use ESX Framework
+Config.UseQBCore = false					-- Use QBCore Framework (Ignored if Config.UseESX = true)
+
+Config.Notify = {
+	enabled = true,							-- Display hint notification?
+	distance = 3.0,							-- Distance from elevator that the hint will show
+	message = "Target the elevator to use"	-- Text of the hint notification
+}
 
 --[[
 	USAGE
@@ -19,6 +25,7 @@ Config.UseQBCore = false		-- Use QBCore Framework (Ignored if Config.UseESX = tr
 		jobs = OPTIONAL: Table of job keys that are allowed to access that floor and value of minimum grade of each job
 		items = OPTIONAL: Any items that are required to access that floor (only requires one of the items listed)
 		jobAndItem = OPTIONAL: If true, you must you have a required job AND a required items. If false or nil no items are needed
+	
 ]]
 
 --[[
