@@ -15,9 +15,9 @@ Config.UseESX = true                            -- Use ESX Framework
 Config.UseQBCore = false                        -- Use QBCore Framework (Ignored if Config.UseESX = true)
 
 Config.Notify = {
-	enabled = true,                             -- Display hint notification?
-	distance = 3.0,                             -- Distance from elevator that the hint will show
-	message = "Target the elevator to use"      -- Text of the hint notification
+	enabled = true,                         -- Display hint notification?
+	distance = 3.0,                         -- Distance from elevator that the hint will show
+	message = "Target the elevator to use"  -- Text of the hint notification
 }
 ```
 I have provided a few preset elevators to utilize as examples and have heavily commented the config.lua file on how to add additional elevators. Here is one example.
