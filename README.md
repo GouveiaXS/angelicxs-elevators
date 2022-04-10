@@ -1,24 +1,71 @@
-# elevators
-elevator script for fivem
+# Elevators
+Elevator script for FiveM
 
-I wanted to make something to utilize elevators that have open interiors without going into additional UIs for the clients while still making it relatively easy to expand as elevators were added to the city.
+I wanted to make something to utilize elevators that have open interiors without going into additional UIs for the clients, while also making it easy to add new elevators as needeed. This is the result.
 
-As such this script uses the following dependencies, however these can easily be changed on the client side.
+### Dependencies:
+ - ESX or QBCore
+ - qtarget
+ - nh-context
 
-nh-context
+### Usage:
+Choose between ESX & QBCore and set an optional help notification in `config.lua`.
+```lua
+Config.UseESX = true                            -- Use ESX Framework
+Config.UseQBCore = false                        -- Use QBCore Framework (Ignored if Config.UseESX = true)
 
-nh-keyboard
+Config.Notify = {
+	enabled = true,                             -- Display hint notification?
+	distance = 3.0,                             -- Distance from elevator that the hint will show
+	message = "Target the elevator to use"      -- Text of the hint notification
+}
+```
+I have provided a few preset elevators to utilize as examples and have heavily commented the config.lua file on how to add additional elevators. Here is one example.
+```lua
+Config.Elevators = {
+	ExampleElevator = {
+		{
+			coords = vector3(111, 111, 111),
+			heading = 0.0,
+			level = "Floor 1",
+			label = "Upstairs",
+			jobs = {
+				["police"] = 0,
+				["ambulance"] = 0,
+				["casino"] = 0
+			},
+			items = {
+				"casino_pass_bronze",
+				"casino_pass_silver",
+				"casino_pass_gold",
+			}
+		},
+		{
+			coords = vector3(222, 222, 222),
+			heading = 0.0,
+			level = "Floor 0",
+			label = "Ground"
+		},
+	},
+}
+```
+Here is a break down of the table options.
 
-qtarget
+	coords: vector3 coords of center of elevator
+	heading: Direction facing out of the elevator
+	level: What floor are they going to
+	label: What is on that floor
+	jobs: [OPTIONAL] Table of job keys that are allowed to access that floor and value of minimum grade of each job
+	items: [OPTIONAL] Any items that are required to access that floor (only requires one of the items listed)
+	jobAndItem: [OPTIONAL] If true, you must you have a required job AND a required items. If false or nil no items are needed
 
-I have provided a few preset elevators to utilize as examples and have heavily commented on how to add additional elevators.
+### Preview:
 
-Preview video:
-https://youtu.be/NhtnfgziWSA 105
+https://youtu.be/NhtnfgziWSA
 
-Credit for Optimizations and Code Rework:
+### Credits:
 
-    DrAceMisanthrope
-    Geerdodagr8
-    wasabirobby
-    smokiiee
+ - DrAceMisanthrope
+ - Geerdodagr8
+ - wasabirobby
+ - smokiiee
