@@ -29,7 +29,7 @@ CreateThread(function()
 		QBCore = exports["qb-core"]:GetCoreObject()
 		 
 		PlayerData = QBCore.Functions.GetPlayerData()
-		if PlayerData.job ~ = nil then
+		if PlayerData.job ~= nil then
 			PlayerJob = PlayerData.job.name
 			PlayerGrade = PlayerData.job.grade.level
 		end
