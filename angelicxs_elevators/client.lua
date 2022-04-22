@@ -29,7 +29,7 @@ CreateThread(function()
 		QBCore = exports["qb-core"]:GetCoreObject()
 		 
 		PlayerData = QBCore.Functions.GetPlayerData()
-		CreateThread(function ()
+		CreateThread(function()
 			while true do
 				if PlayerData.citizenid ~= nil then
 					PlayerJob = PlayerData.job.name
