@@ -37,7 +37,7 @@ Config.Notify = {
 			jobs = {
 				["police"] = 0,
 				["ambulance"] = 0,
-				["casino"] = 0
+				["casino"] = 0,
 			},
 			items = {
 				"casino_pass_bronze",
@@ -50,11 +50,11 @@ Config.Notify = {
 			jobs = {
 				["police"] = 0,
 				["ambulance"] = 0,
-				["casino"] = 0
+				["casino"] = 0,
 			},
 			items = {
-				"casino_pass_gold"
-			}
+				"casino_pass_gold",
+			},
 			jobAndItem = true
 		},
 		{
