@@ -141,7 +141,12 @@ end)
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-	local hasJob, hasItem = false, false
+    if Config.UseESX then
+        PlayerData = ESX.GetPlayerData()
+    elseif Config.UseQBCore then
+        PlayerData = QBCore.Functions.GetPlayerData()
+    end
+    local hasJob, hasItem = false, false
 	if floor.jobs ~= nil and next(floor.jobs) then
 		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
