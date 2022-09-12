@@ -50,7 +50,7 @@ end)
 CreateThread(function()
 	for elevatorName, elevatorFloors in pairs(Config.Elevators) do
 		for index, floor in pairs(elevatorFloors) do
-			exports["qtarget"]:AddBoxZone(elevatorName .. index, floor.coords, 5, 4, {
+			exports[Config.ThirdEyeName]:AddBoxZone(elevatorName .. index, floor.coords, 5, 4, {
 				name = elevatorName,
 				heading = floor.heading,
 				debugPoly = false,
@@ -106,24 +106,67 @@ end)
 
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
+	local floor = {}
 	if Config.UseESX then
 		PlayerData = ESX.GetPlayerData()
 	elseif Config.UseQBCore then
 		PlayerData = QBCore.Functions.GetPlayerData()
 	end	
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
-		table.insert(elevator, {
-			header = floor.level,
-			context = floor.label,
-			disabled = isDisabled(index, floor, data),
-			event = "angelicxs_elevator:movement",
-			args = { floor }
-		})
+		if Config.NHMenu then
+			table.insert(elevator, {
+				header = floor.level,
+				context = floor.label,
+				disabled = isDisabled(index, floor, data),
+				event = "angelicxs_elevator:movement",
+				args = { floor }
+			})
+		elseif Config.QBMenu then
+			table.insert(elevator, {
+				header = floor.level,
+				txt = floor.label,
+				disabled = isDisabled(index, floor, data),
+				params ={ 
+					event = "angelicxs_elevator:movement",
+					args = floor
+					}
+			})
+		elseif Config.OXLib then
+			table.insert(elevator, {
+				label = floor.level..' - '..floor.label,
+				args = { value = floor.coords, value2 = isDisabled(index, floor, data)}
+			})
+		end
 	end
-	TriggerEvent("nh-context:createMenu", elevator)
+	if Config.NHMenu then
+		TriggerEvent("nh-context:createMenu", elevator)
+	elseif Config.QBMenu then
+		TriggerEvent("qb-menu:client:openMenu", elevator)
+	elseif Config.OXLib then
+		lib.registerMenu({
+			id = 'elevator_ox',
+			title = 'Elevator Floor Selector',
+			options = elevator,
+			position = 'top-right',
+		}, function(selected, scrollIndex, args)
+			if not args.value2 then
+				TriggerEvent("angelicxs_elevator:movement", args.value)
+			else
+				NotifyNoAccess()
+			end
+		end)
+		lib.showMenu('elevator_ox')
+	end
+
 end)
 
-RegisterNetEvent("angelicxs_elevator:movement", function(floor)
+RegisterNetEvent("angelicxs_elevator:movement", function(arg)
+	local floor = {}
+	if Config.OXLib then
+		floor.coords = arg
+	else
+		floor = arg
+	end
 	local ped = PlayerPedId()
 	DoScreenFadeOut(1500)
 	while not IsScreenFadedOut() do
@@ -135,7 +178,7 @@ RegisterNetEvent("angelicxs_elevator:movement", function(floor)
 	end
 	SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
 	SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
-	Wait(3000)
+	Wait(Config.ElevatorWaitTime*1000)
 	DoScreenFadeIn(1500)
 end)
 
@@ -184,6 +227,12 @@ end
 
 function NotifyHint()
 	AddTextEntry('elevatorHelp', Config.Notify.message)
+	BeginTextCommandDisplayHelp('elevatorHelp')
+	EndTextCommandDisplayHelp(0, false, true, -1)
+end
+
+function NotifyNoAccess()
+	AddTextEntry('elevatorHelp', 'You cannot use this!')
 	BeginTextCommandDisplayHelp('elevatorHelp')
 	EndTextCommandDisplayHelp(0, false, true, -1)
 end
