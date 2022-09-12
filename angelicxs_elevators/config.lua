@@ -5,6 +5,12 @@ Config = {}
 Config.UseESX = true						-- Use ESX Framework
 Config.UseQBCore = false					-- Use QBCore Framework (Ignored if Config.UseESX = true)
 
+Config.ThirdEyeName = 'qb-target' 			-- Name of third eye aplication
+Config.NHMenu = false						-- Use NH-Menu [https://github.com/nerohiro/nh-keyboard]
+Config.QBMenu = true						-- Use QB-Menu (Ignored if Config.NHInput = true) [https://github.com/qbcore-framework/qb-input]
+Config.OXLib = false						-- Use the OX_lib (Ignored if Config.NHInput or Config.QBInput = true) [https://github.com/overextended/ox_lib] !! must add shared_script '@ox_core/imports/client.lua' and lua54 'yes' to fxmanifest!!
+Config.ElevatorWaitTime = 3					-- How many seconds until the player arrives at their floor
+
 Config.Notify = {
 	enabled = true,							-- Display hint notification?
 	distance = 3.0,							-- Distance from elevator that the hint will show
@@ -13,12 +19,6 @@ Config.Notify = {
 
 --[[
 	USAGE
-
-	Dependencies (can be swapped out):
-		ESX or QBCore
-		qtarget
-		nh-context
-
 	To add an elevator, copy the table below and configure as needed:
 		coords = vector3 coords of center of elevator
 		heading = Direction facing out of the elevator
