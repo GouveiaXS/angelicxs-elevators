@@ -1,5 +1,6 @@
 # Elevators
 Elevator script for FiveM
+Please check out other scripts by me on CFX (https://forum.cfx.re/u/angelicxs/activity/topics) or my paid stuff on Tebex (https://angelicxs.tebex.io/)
 
 I wanted to make something to utilize elevators that have open interiors without going into additional UIs for the clients, while also making it easy to add new elevators as needeed. This is the result.
 
