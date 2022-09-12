@@ -8,8 +8,3 @@ client_scripts {
     'config.lua',
     'client.lua',
 }
-
-dependencies {
-    'qtarget',
-    'nh-context'
-}
