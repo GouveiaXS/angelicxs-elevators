@@ -104,6 +104,32 @@ CreateThread(function()
 
 end)
 
+CreateThread(function()
+    while Config.Use3DText do
+        local sleep = 2000
+        local playerCoords = GetEntityCoords(PlayerPedId())
+        for elevatorName, elevatorFloors in pairs(Config.Elevators) do
+            for index, floor in pairs(elevatorFloors) do
+                local distance = #(playerCoords - floor.coords)
+                if distance <= 10.0 then
+                    sleep = 100
+                    if distance <= 5 then
+			sleep = 0
+                        DrawText3Ds(floor.coords.x,floor.coords.y,floor.coords.z, "Press ~r~E~w~ to use Elevator From " .. floor.level)
+                        if IsControlJustReleased(0, 38) then
+                            local data = {}
+                            data.elevator = elevatorName
+                            data.level = index
+                            TriggerEvent('angelicxs_elevator:showFloors', data)
+                        end
+                    end
+                end
+            end
+        end
+        Wait(sleep)
+    end
+end)
+
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	local elevator = {}
 	local floor = {}
@@ -235,4 +261,19 @@ function NotifyNoAccess()
 	AddTextEntry('elevatorHelp', 'You cannot use this!')
 	BeginTextCommandDisplayHelp('elevatorHelp')
 	EndTextCommandDisplayHelp(0, false, true, -1)
+end
+
+function DrawText3Ds(x,y,z, text)
+    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
+    local px,py,pz=table.unpack(GetGameplayCamCoords())
+    SetTextScale(0.30, 0.30)
+    SetTextFont(4)
+    SetTextProportional(1)
+    SetTextColour(255, 255, 255, 215)
+    SetTextEntry('STRING')
+    SetTextCentre(1)
+    AddTextComponentString(text)
+    DrawText(_x,_y)
+    local factor = (string.len(text)) / 370
+    DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
 end
