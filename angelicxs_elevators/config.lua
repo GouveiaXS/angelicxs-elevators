@@ -7,7 +7,7 @@ Config.UseQBCore = false					-- Use QBCore Framework (Ignored if Config.UseESX =
 
 Config.ThirdEyeName = 'qb-target' 			-- Name of third eye aplication
 Config.Use3DText = true                        -- Use 3D text to interact
-Config.NHMenu = false						-- Use NH-Menu [https://github.com/nerohiro/nh-keyboard]
+Config.NHMenu = false						-- Use NH-Context [https://github.com/nighmares/nh-context]
 Config.QBMenu = true						-- Use QB-Menu (Ignored if Config.NHInput = true) [https://github.com/qbcore-framework/qb-input]
 Config.OXLib = false						-- Use the OX_lib (Ignored if Config.NHInput or Config.QBInput = true) [https://github.com/overextended/ox_lib] !! must add shared_script '@ox_lib/init.lua' and lua54 'yes' to fxmanifest!!
 Config.ElevatorWaitTime = 3					-- How many seconds until the player arrives at their floor
