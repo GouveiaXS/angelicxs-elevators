@@ -46,6 +46,7 @@ end)
 CreateThread(function()
 	for elevatorName, elevatorFloors in pairs(Config.Elevators) do
 		for index, floor in pairs(elevatorFloors) do
+			local string = tostring(elevatorName .. index)
 			if Config.ThirdEyeName == 'ox_target' then
 				local info = {}
 				info.elevator = elevatorName
@@ -57,7 +58,7 @@ CreateThread(function()
 				    debug = drawZones,
 				    options = {
 					{
-					    name = tostring(elevatorName .. index),
+					    name = string,
 					    event = 'ox_target:debug',
 					    icon = "fas fa-hand-point-up",
 					    label = "Use Elevator From " .. floor.level,
@@ -68,7 +69,7 @@ CreateThread(function()
 				    }
 				})
 			else
-				exports[Config.ThirdEyeName]:AddBoxZone(elevatorName .. index, floor.coords, 5, 4, {
+				exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 5, 4, {
 					name = elevatorName,
 					heading = floor.heading,
 					debugPoly = false,
