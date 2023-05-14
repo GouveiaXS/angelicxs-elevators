@@ -59,7 +59,6 @@ CreateThread(function()
 				    options = {
 					{
 					    name = string,
-					    event = 'ox_target:debug',
 					    icon = "fas fa-hand-point-up",
 					    label = "Use Elevator From " .. floor.level,
 					    onSelect = function()
