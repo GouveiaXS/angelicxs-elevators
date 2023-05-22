@@ -8,9 +8,9 @@ CreateThread(function()
 	if Config.UseESX then
 		ESX = exports["es_extended"]:getSharedObject()
 		while not ESX.IsPlayerLoaded() do
-            		Wait(100)
-        	end
-	
+					Wait(100)
+			end
+
 		PlayerData = ESX.GetPlayerData()
 		PlayerJob = PlayerData.job.name
 		PlayerGrade = PlayerData.job.grade
@@ -23,7 +23,7 @@ CreateThread(function()
 	elseif Config.UseQBCore then
 
 		QBCore = exports["qb-core"]:GetCoreObject()
-		 
+
 		CreateThread(function()
 			while true do
 				PlayerData = QBCore.Functions.GetPlayerData()
@@ -52,23 +52,23 @@ CreateThread(function()
 				info.elevator = elevatorName
 				info.level = index
 				exports.ox_target:addBoxZone({
-				    coords = vec3(floor.coords.x, floor.coords.y, floor.coords.z),
-				    size = vec3(5, 4, 3),
-				    rotation = floor.heading,
-				    debug = drawZones,
-				    options = {
+					coords = vec3(floor.coords.x, floor.coords.y, floor.coords.z),
+					size = vec3(3, 3, 3),
+					rotation = floor.heading,
+					debug = drawZones,
+					options = {
 					{
-					    name = string,
-					    icon = "fas fa-hand-point-up",
-					    label = "Use Elevator From " .. floor.level,
-					    onSelect = function()
+						name = string,
+						icon = "fas fa-hand-point-up",
+						label = "Use Elevator From " .. floor.level,
+						onSelect = function()
 						TriggerEvent("angelicxs_elevator:showFloors",info)
-					    end
+						end
 					}
-				    }
+					}
 				})
 			else
-				exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 5, 4, {
+				exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 3, 3, {
 					name = elevatorName,
 					heading = floor.heading,
 					debugPoly = false,
@@ -85,7 +85,7 @@ CreateThread(function()
 							level = index
 						},
 					},
-					distance = 1.5 
+					distance = 1.5
 				})
 			end
 		end
@@ -124,29 +124,26 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-    while Config.Use3DText do
-        local sleep = 2000
-        local playerCoords = GetEntityCoords(PlayerPedId())
-        for elevatorName, elevatorFloors in pairs(Config.Elevators) do
-            for index, floor in pairs(elevatorFloors) do
-                local distance = #(playerCoords - floor.coords)
-                if distance <= 10.0 then
-                    sleep = 100
-                    if distance <= 5 then
-			sleep = 0
-                        DrawText3Ds(floor.coords.x,floor.coords.y,floor.coords.z, "Press ~r~E~w~ to use Elevator From " .. floor.level)
-                        if IsControlJustReleased(0, 38) then
-                            local data = {}
-                            data.elevator = elevatorName
-                            data.level = index
-                            TriggerEvent('angelicxs_elevator:showFloors', data)
-                        end
-                    end
-                end
-            end
-        end
-        Wait(sleep)
-    end
+	while Config.Use3DText do
+		local sleep = 2000
+		local playerCoords = GetEntityCoords(PlayerPedId())
+		for elevatorName, elevatorFloors in pairs(Config.Elevators) do
+			for index, floor in pairs(elevatorFloors) do
+				local distance = #(playerCoords - floor.coords)
+				if distance <= 3.0 then
+					sleep = 0
+					DrawText3Ds(floor.coords.x,floor.coords.y,floor.coords.z, "Press ~r~E~w~ to use Elevator From " .. floor.level)
+					if distance <= 1.5 and IsControlJustReleased(0, 38) then
+						local data = {}
+						data.elevator = elevatorName
+						data.level = index
+						TriggerEvent('angelicxs_elevator:showFloors', data)
+					end
+				end
+			end
+		end
+		Wait(sleep)
+	end
 end)
 
 RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
@@ -156,7 +153,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 		PlayerData = ESX.GetPlayerData()
 	elseif Config.UseQBCore then
 		PlayerData = QBCore.Functions.GetPlayerData()
-	end	
+	end
 	for index, floor in pairs(Config.Elevators[data.elevator]) do
 		if Config.NHMenu then
 			table.insert(elevator, {
@@ -171,7 +168,7 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 				header = floor.level,
 				txt = floor.label,
 				disabled = isDisabled(index, floor, data),
-				params ={ 
+				params ={
 					event = "angelicxs_elevator:movement",
 					args = floor
 					}
@@ -229,12 +226,12 @@ end)
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-    if Config.UseESX then
-        PlayerData = ESX.GetPlayerData()
-    elseif Config.UseQBCore then
-        PlayerData = QBCore.Functions.GetPlayerData()
-    end
-    local hasJob, hasItem = false, false
+	if Config.UseESX then
+		PlayerData = ESX.GetPlayerData()
+	elseif Config.UseQBCore then
+		PlayerData = QBCore.Functions.GetPlayerData()
+	end
+	local hasJob, hasItem = false, false
 	if floor.jobs ~= nil and next(floor.jobs) then
 		for jobName, gradeLevel in pairs(floor.jobs) do
 			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
@@ -266,7 +263,7 @@ function isDisabled(index, floor, data)
 			end
 		end
 	end
-	if floor.jobs == nil and floor.items == nil then return false end 
+	if floor.jobs == nil and floor.items == nil then return false end
 	return floor.jobAndItem and not (hasJob and hasItem) or not (hasJob or hasItem)
 end
 
@@ -283,16 +280,16 @@ function NotifyNoAccess()
 end
 
 function DrawText3Ds(x,y,z, text)
-    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
-    local px,py,pz=table.unpack(GetGameplayCamCoords())
-    SetTextScale(0.30, 0.30)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry('STRING')
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(_x,_y)
-    local factor = (string.len(text)) / 370
-    DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
+	local onScreen,_x,_y=World3dToScreen2d(x,y,z)
+	local px,py,pz=table.unpack(GetGameplayCamCoords())
+	SetTextScale(0.30, 0.30)
+	SetTextFont(4)
+	SetTextProportional(1)
+	SetTextColour(255, 255, 255, 215)
+	SetTextEntry('STRING')
+	SetTextCentre(1)
+	AddTextComponentString(text)
+	DrawText(_x,_y)
+	local factor = (string.len(text)) / 370
+	DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
 end
