@@ -125,25 +125,29 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	while Config.Use3DText do
-		local sleep = 2000
-		local playerCoords = GetEntityCoords(PlayerPedId())
+	if Config.Use3DText then
 		for elevatorName, elevatorFloors in pairs(Config.Elevators) do
 			for index, floor in pairs(elevatorFloors) do
-				local distance = #(playerCoords - floor.coords)
-				if distance <= 3.0 then
-					sleep = 0
-					DrawText3Ds(floor.coords.x,floor.coords.y,floor.coords.z, "Press ~r~E~w~ to use Elevator From " .. floor.level)
-					if distance <= 1.5 and IsControlJustReleased(0, 38) then
-						local data = {}
-						data.elevator = elevatorName
-						data.level = index
-						TriggerEvent('angelicxs_elevator:showFloors', data)
+				CreateThread(function()
+					while true do
+						local sleep = 2000
+						local playerCoords = GetEntityCoords(PlayerPedId())
+						local distance = #(playerCoords - floor.coords)
+						if distance <= 3.0 then
+							sleep = 0
+							DrawText3Ds(floor.coords.x,floor.coords.y,floor.coords.z, "Press ~r~E~w~ to use Elevator From " .. floor.level)
+							if distance <= 1.5 and IsControlJustReleased(0, 38) then
+								local data = {}
+								data.elevator = elevatorName
+								data.level = index
+								TriggerEvent('angelicxs_elevator:showFloors', data)
+							end
+						end
+						Wait(sleep)
 					end
-				end
+				end)
 			end
 		end
-		Wait(sleep)
 	end
 end)
 
