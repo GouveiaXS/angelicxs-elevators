@@ -44,49 +44,51 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	for elevatorName, elevatorFloors in pairs(Config.Elevators) do
-		for index, floor in pairs(elevatorFloors) do
-			local string = tostring(elevatorName .. index)
-			if Config.ThirdEyeName == 'ox_target' then
-				local info = {}
-				info.elevator = elevatorName
-				info.level = index
-				exports.ox_target:addBoxZone({
-					coords = vec3(floor.coords.x, floor.coords.y, floor.coords.z),
-					size = vec3(3, 3, 3),
-					rotation = floor.heading,
-					debug = drawZones,
-					options = {
-					{
-						name = string,
-						icon = "fas fa-hand-point-up",
-						label = "Use Elevator From " .. floor.level,
-						onSelect = function()
-						TriggerEvent("angelicxs_elevator:showFloors",info)
-						end
-					}
-					}
-				})
-			else
-				exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 3, 3, {
-					name = elevatorName,
-					heading = floor.heading,
-					debugPoly = false,
-					minZ = floor.coords.z - 1.5,
-					maxZ = floor.coords.z + 1.5
-				},
-				{
-					options = {
+	if Config.UseThirdEye then
+		for elevatorName, elevatorFloors in pairs(Config.Elevators) do
+			for index, floor in pairs(elevatorFloors) do
+				local string = tostring(elevatorName .. index)
+				if Config.ThirdEyeName == 'ox_target' then
+					local info = {}
+					info.elevator = elevatorName
+					info.level = index
+					exports.ox_target:addBoxZone({
+						coords = vec3(floor.coords.x, floor.coords.y, floor.coords.z),
+						size = vec3(3, 3, 3),
+						rotation = floor.heading,
+						debug = drawZones,
+						options = {
 						{
-							event = "angelicxs_elevator:showFloors",
+							name = string,
 							icon = "fas fa-hand-point-up",
 							label = "Use Elevator From " .. floor.level,
-							elevator = elevatorName,
-							level = index
-						},
+							onSelect = function()
+							TriggerEvent("angelicxs_elevator:showFloors",info)
+							end
+						}
+						}
+					})
+				else
+					exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 3, 3, {
+						name = elevatorName,
+						heading = floor.heading,
+						debugPoly = false,
+						minZ = floor.coords.z - 1.5,
+						maxZ = floor.coords.z + 1.5
 					},
-					distance = 1.5
-				})
+					{
+						options = {
+							{
+								event = "angelicxs_elevator:showFloors",
+								icon = "fas fa-hand-point-up",
+								label = "Use Elevator From " .. floor.level,
+								elevator = elevatorName,
+								level = index
+							},
+						},
+						distance = 1.5
+					})
+				end
 			end
 		end
 	end
@@ -120,7 +122,6 @@ CreateThread(function()
 			Wait(sleep)
 		end
 	end
-
 end)
 
 CreateThread(function()
