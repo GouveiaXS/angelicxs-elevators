@@ -180,8 +180,12 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 			})
 		elseif Config.OXLib then
 			table.insert(elevator, {
-				label = floor.level..' - '..floor.label,
-				args = { value = floor.coords, value2 = isDisabled(index, floor, data)}
+				title = floor.level,
+				description = floor.label,
+				disabled = isDisabled(index, floor, data),
+				onSelect = function()
+					TriggerEvent("angelicxs_elevator:movement", floor)
+				end
 			})
 		end
 	end
@@ -190,30 +194,20 @@ RegisterNetEvent("angelicxs_elevator:showFloors", function(data)
 	elseif Config.QBMenu then
 		TriggerEvent("qb-menu:client:openMenu", elevator)
 	elseif Config.OXLib then
-		lib.registerMenu({
-			id = 'elevator_ox',
-			title = 'Elevator Floor Selector',
+		lib.registerContext({
+			id = 'angelicxs-elevator_ox',
 			options = elevator,
+			title = data.elevator,
 			position = 'top-right',
 		}, function(selected, scrollIndex, args)
-			if not args.value2 then
-				TriggerEvent("angelicxs_elevator:movement", args.value)
-			else
-				NotifyNoAccess()
-			end
 		end)
-		lib.showMenu('elevator_ox')
+		lib.showContext('angelicxs-elevator_ox')
 	end
 
 end)
 
 RegisterNetEvent("angelicxs_elevator:movement", function(arg)
-	local floor = {}
-	if Config.OXLib then
-		floor.coords = arg
-	else
-		floor = arg
-	end
+	local floor = arg
 	local ped = PlayerPedId()
 	DoScreenFadeOut(1500)
 	while not IsScreenFadedOut() do
@@ -274,12 +268,6 @@ end
 
 function NotifyHint()
 	AddTextEntry('elevatorHelp', Config.Notify.message)
-	BeginTextCommandDisplayHelp('elevatorHelp')
-	EndTextCommandDisplayHelp(0, false, true, -1)
-end
-
-function NotifyNoAccess()
-	AddTextEntry('elevatorHelp', 'You cannot use this!')
 	BeginTextCommandDisplayHelp('elevatorHelp')
 	EndTextCommandDisplayHelp(0, false, true, -1)
 end
