@@ -70,7 +70,7 @@ CreateThread(function()
 					})
 				else
 					exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 3, 3, {
-						name = elevatorName,
+						name = string,
 						heading = floor.heading,
 						debugPoly = false,
 						minZ = floor.coords.z - 1.5,
