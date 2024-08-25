@@ -12,14 +12,6 @@ CreateThread(function()
 			end
 
 		PlayerData = ESX.GetPlayerData()
-		PlayerJob = PlayerData.job.name
-		PlayerGrade = PlayerData.job.grade
-
-		RegisterNetEvent("esx:setJob", function(job)
-			PlayerJob = job.name
-			PlayerGrade = job.grade
-		end)
-
 	elseif Config.UseQBCore then
 
 		QBCore = exports["qb-core"]:GetCoreObject()
@@ -28,17 +20,10 @@ CreateThread(function()
 			while true do
 				PlayerData = QBCore.Functions.GetPlayerData()
 				if PlayerData.citizenid ~= nil then
-					PlayerJob = PlayerData.job.name
-					PlayerGrade = PlayerData.job.grade.level
 					break
 				end
 				Wait(100)
 			end
-		end)
-
-		RegisterNetEvent("QBCore:Client:OnJobUpdate", function(job)
-			PlayerJob = job.name
-			PlayerGrade = job.grade.level
 		end)
 	end
 end)
@@ -70,7 +55,7 @@ CreateThread(function()
 					})
 				else
 					exports[Config.ThirdEyeName]:AddBoxZone(string, floor.coords, 3, 3, {
-						name = string,
+						name = elevatorName,
 						heading = floor.heading,
 						debugPoly = false,
 						minZ = floor.coords.z - 1.5,
@@ -217,7 +202,7 @@ RegisterNetEvent("angelicxs_elevator:movement", function(arg)
 	while not HasCollisionLoadedAroundEntity(ped) do
 		Wait(0)
 	end
-	SetEntityCoords(ped, floor.coords.x, floor.coords.y, floor.coords.z, false, false, false, false)
+	SetPedCoordsKeepVehicle(ped, floor.coords.x, floor.coords.y, floor.coords.z)
 	SetEntityHeading(ped, floor.heading and floor.heading or 0.0)
 	Wait(Config.ElevatorWaitTime*1000)
 	DoScreenFadeIn(1500)
@@ -225,15 +210,10 @@ end)
 
 function isDisabled(index, floor, data)
 	if index == data.level then return true end
-	if Config.UseESX then
-		PlayerData = ESX.GetPlayerData()
-	elseif Config.UseQBCore then
-		PlayerData = QBCore.Functions.GetPlayerData()
-	end
 	local hasJob, hasItem = false, false
 	if floor.jobs ~= nil and next(floor.jobs) then
 		for jobName, gradeLevel in pairs(floor.jobs) do
-			if PlayerJob == jobName and PlayerGrade >= gradeLevel then
+			if (PlayerData.job.name == jobName and PlayerData.job.grade >= gradeLevel)  or (PlayerData.citizenid == jobName) or (PlayerData.gang.name == jobName and PlayerData.gang.grade >= gradeLevel) then
 				hasJob = true
 				break
 			end
