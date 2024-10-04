@@ -213,7 +213,7 @@ function isDisabled(index, floor, data)
 	local hasJob, hasItem = false, false
 	if floor.jobs ~= nil and next(floor.jobs) then
 		for jobName, gradeLevel in pairs(floor.jobs) do
-			if (PlayerData.job.name == jobName and PlayerData.job.grade >= gradeLevel)  or (PlayerData.citizenid == jobName) or (PlayerData.gang.name == jobName and PlayerData.gang.grade >= gradeLevel) then
+			if (PlayerData.job.name == jobName and PlayerData.job.grade.level >= gradeLevel)  or (PlayerData.citizenid == jobName) or (PlayerData.gang.name == jobName and PlayerData.gang.grade.level >= gradeLevel) then
 				hasJob = true
 				break
 			end
